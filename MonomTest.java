@@ -1,57 +1,117 @@
-package myMath;
-import java.util.ArrayList;
-/**
- * This class represents a simple (naive) tester for the Monom class, 
- * Note: <br>
- * (i) The class is NOT a JUNIT - (i.e., educational reasons) - should be changed to a proper JUnit in Ex1. <br>
- * (ii) This tester should be extend in order to test ALL the methods and functionality of the Monom class.  <br>
- * (iii) Expected output:  <br>
- * *****  Test1:  *****  <br>
-0) 2.0    	isZero: false	 f(0) = 2.0  <br>
-1) -1.0x    	isZero: false	 f(1) = -1.0  <br>
-2) -3.2x^2    	isZero: false	 f(2) = -12.8  <br>
-3) 0    	isZero: true	 f(3) = 0.0  <br>
-*****  Test2:  *****  <br>
-0) 0    	isZero: true  	eq: true  <br>
-1) -1.0    	isZero: false  	eq: true  <br>
-2) -1.3x    	isZero: false  	eq: true  <br>
-3) -2.2x^2    	isZero: false  	eq: true  <br>
- */
-public class MonomTest {
-	public static void main(String[] args) {
-		Monom m = new Monom("2x");
-		System.out.println(m.root(-1, 1, 1));
-		Monom b = new Monom("2x^3");
-		System.out.println(m.equals(b));
-		test1();
-		test2();
+package Ex1;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.Test;
+
+class MonomTest {
+	String[] monoms = {"-2", "3","-4.1","0","5.2","-x","5x","-2.1x","4.1x","-x^2","5x^3","-4.3x^4","5.3x^6","0x^3","0x"};
+
+	public static void Main(String[] args) {
+	//	test1();
+
+
 	}
-	private static void test1() {			//mathematical test
-		System.out.println("*****  Test1:  *****");
-		String[] monoms = {"-2", "3","-4.1","0","5.2","-x","5x","-2.1x","4.1x","-x^2","5x^3","-4.3x^4","5.3x^6","0x^3","0X"};
+
+
+
+	@Test
+	void testDerivative() {
 		for(int i=0;i<monoms.length;i++) {
 			Monom m = new Monom(monoms[i]);
-			String s = m.toString();
-			m = new Monom(s);
+			Monom D = m.derivative();
+			System.out.println(i+") the monom is: "+m +"\t the derivative is = "+D);
+		}
+	}
+
+	@Test
+	void testF() {
+		for(int i=0;i<monoms.length;i++) {
+			Monom m = new Monom(monoms[i]);
 			double fx = m.f(i);
-			System.out.println(i+") "+m +"    \tisZero: "+m.isZero()+"\t f("+i+") = "+fx);
-			System.out.println();
+			System.out.println(i+") the monom is: "+m +"\t the value at f("+i+") is = "+fx);
 		}
 	}
-	private static void test2() {			//function test
-		System.out.println("*****  Test2:  *****");
-		ArrayList<Monom> monoms = new ArrayList<Monom>();
-		monoms.add(new Monom(0,5));
-		monoms.add(new Monom(-1,0));
-		monoms.add(new Monom(-1.3,1));
-		monoms.add(new Monom(-2.2,2));
-		
-		for(int i=0;i<monoms.size();i++) {
-			Monom m = new Monom(monoms.get(i));
-			String s = m.toString();
-			Monom m1 = new Monom(s);
-			boolean e = m.equals(m1);
-			System.out.println(i+") "+m +"    \tisZero: "+m.isZero()+"  \teq: "+e);
+
+
+	@Test
+	void testIsZero() {
+		for(int i=0;i<monoms.length;i++) {
+			Monom m = new Monom(monoms[i]);
+			System.out.println(i+")the monom is: "+m +"    \tisZero?: "+m.isZero());
 		}
 	}
+
+	@Test
+	void testAdd() {
+		for(int i=0;i<monoms.length;i++) {
+			Monom m = new Monom(monoms[i]);
+			System.out.println("the Monom is: "+m);
+			m.add(m);
+			System.out.println("After adding it to himself: "+m);
+		}
+	}
+
+	@Test
+	void testMultipy() {
+		for(int i=0;i<monoms.length;i++) {
+			Monom m = new Monom(monoms[i]);
+			System.out.println("the Monom is: "+m);
+			m.multipy(m);
+			System.out.println("After multipliying it to himself: "+m);
+		}
+	}
+
+	@Test
+	void testEqualsObject() {
+		Object obj = new Object();
+		Object obj1 = new Monom("2x");
+		Monom a = new Monom("2x");
+		Monom a1 = new Monom("2.0x");
+		Monom a2 = new Monom("2.1x");
+		Monom b = new Monom("2.0x^2");
+		Monom b1 = new Monom("2x^2");
+		Monom b2 = new Monom("2x^3");
+		System.out.println("check for regular monom");
+		System.out.println(a+" isEqual to: "+a1+"?" +a.equals(a1));			//int with double same value
+		System.out.println(a+" isEqual to: "+a2+"?" +a.equals(a2));			//different value with int and double
+		System.out.println(a1+" isEqual to: "+a2+"?" +a1.equals(a2));		//different value with double and double
+		System.out.println("check for monom with a power");
+		System.out.println(b+" isEqual to: "+b1+"?" +b.equals(b1));			//int with double same value in coefficient and same power
+		System.out.println(b+" isEqual to: "+b2+"?" +b.equals(b2));			//same value with int and double in coefficient but diffrent power
+		System.out.println(b1+" isEqual to: "+b2+"?" +b1.equals(b2));		//same value with int and different power
+		System.out.println("does the object: "+obj+" equals to:"+a+" " +obj.equals(a));
+		System.out.println("does the object: "+obj1+" equals to:"+a +" "+obj1.equals(a));
+	}
+
+	@Test
+	void testArea() {
+		for(int i=0;i<monoms.length;i++) {
+			Monom m = new Monom(monoms[i]);
+			System.out.println("the Monom is: "+m);
+			m.multipy(m);
+			System.out.println("The area is: "+m.area(0, 2, 0.1));
+		}
+	}
+
+	@Test
+	void testRoot() {
+		for(int i=0;i<monoms.length;i++) {
+			Monom m = new Monom(monoms[i]);
+			System.out.println("the Monom is: "+m);
+			m.multipy(m);
+			System.out.println("The root is: "+m.root(0, 2, 0.1));
+		}
+	}
+
+	@Test
+	void testInitFromString() {
+		fail("Not yet implemented");
+	}
+
+	@Test
+	void testCopy() {
+		fail("Not yet implemented");
+	}
+
 }

@@ -1,5 +1,5 @@
 
-package myMath;
+package Ex1;
 
 import java.util.Comparator;
 import java.util.InputMismatchException;
@@ -63,13 +63,8 @@ public class Monom implements function{
 					throw new InputMismatchException();
 				}
 			}
-			if(s.length()>1 && s.charAt(s.length()-1) =='x'&&s.charAt(s.length()-2)=='x') {
-				throw new InputMismatchException();
-				}
-			if(s.length() == 1 && s.charAt(0) == '-') {
-				throw new InputMismatchException();
-			}
-			}
+			if(s.length()==1 && !Character.isDigit(s.charAt(0)) && s.charAt(0)!= 'x' )throw new InputMismatchException();
+			
 			String a ="";												//building the coefficient
 			int i=0;
 			while(i<s.length() && s.charAt(i) != 'x') {
@@ -85,7 +80,7 @@ public class Monom implements function{
 			if(s.charAt(s.length()-1)=='x') {
 				this.set_power(1);
 				}
-			else if(i+1<s.length() ){
+			else if(i+2<s.length() ){
 				i+=2;
 				String b = "";
 				while(i<s.length()) {
@@ -125,11 +120,13 @@ public class Monom implements function{
 		String ans = this.get_coefficient()+"x^"+this.get_power();
 		return ans;
 	}
-	public boolean equals(Monom o2) {						//checks if the monoms are equal in a certain range(0.000001)
-		if(this._coefficient >= o2._coefficient-0.000001 && this._coefficient<=o2._coefficient+0.000001 && this._power==o2._power)
-			return true;
+	public boolean equals(Object o) {						//checks if the monoms are equal in a certain range(0.000001)
+	if(o instanceof Monom) {
+	Monom o2 = (Monom)o; 
+		if(this._coefficient >= o2._coefficient-0.000001 && this._coefficient<=o2._coefficient+0.000001 && this._power==o2._power)return true;
 		else return false;
-		
+	}
+	return false;
 	}
 	public double area(double x0, double x1, double eps) {		//Calculate the area in between the function and the x axis
 		double sum = 0;
@@ -153,7 +150,7 @@ public class Monom implements function{
 				if((lowf*f(mid))>0) {			//the same sign
 					high=mid;
 				}
-				else {							//the same sign
+				else {							//different sign
 					low=mid;
 				}
 			}
@@ -178,6 +175,15 @@ public class Monom implements function{
 	private static Monom getNewZeroMonom() {return new Monom(ZERO);}
 	private double _coefficient; 
 	private int _power;
-
+	
+	public function initFromString(String s) {
+		function a = new Monom(s);
+		return a;
+	}
+	public function copy() {// clone
+		function a = new Monom(this._coefficient,this._power);
+	return a;
+	}
+	
 
 }

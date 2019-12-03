@@ -1,10 +1,11 @@
-package myMath;
+package Ex1;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.function.Predicate;
-import myMath.Monom;
+
+import Ex1.Monom;
 /**
  * This class represents a Polynom with add, multiply functionality, it also should support the following:
  * 1. Riemann's Integral: https://en.wikipedia.org/wiki/Riemann_integral
@@ -16,17 +17,14 @@ import myMath.Monom;
  */
 public class Polynom implements Polynom_able{
 	private ArrayList<Monom> polynom = new ArrayList<Monom>();
-	public static final Comparator<Monom> _Comp = new Monom_Comperator();
+
 	/**
 	 * Zero (empty polynom)
 	 */
 	public Polynom() {							//default constructor 
 		Monom m = new Monom("0");
 		this.polynom.add(m);
-		
-	}
-	public Polynom(Polynom p1) {							//default constructor 
-		this.add(p1);
+
 	}
 	/**
 	 * init a Polynom from a String such as:
@@ -34,16 +32,13 @@ public class Polynom implements Polynom_able{
 	 * @param s: is a string represents a Polynom
 	 */
 	public Polynom(String s) {				//plynom constructor from a string
-		if(s.isEmpty()) {
-			System.out.println("ERR the input is empty");
-		}
 		int i = 0;
 		while (i<s.length()) {
 			String a = "";
 			while(i<s.length()) {
 				a+=s.charAt(i);
 				i++;
-				if(i<s.length()&&(s.charAt(i) == '+' || (s.charAt(i) == '-'&&s.charAt(i-1) != '-')))
+				if(i<s.length()&&(s.charAt(i) == '+' || s.charAt(i) == '-'))
 					break;
 			}
 			Monom m = new Monom(a);
@@ -67,6 +62,7 @@ public class Polynom implements Polynom_able{
 		while(it.hasNext()) {
 			this.add(it.next());
 		}
+
 	}
 
 	@Override
@@ -78,19 +74,24 @@ public class Polynom implements Polynom_able{
 			}
 		}
 		polynom.add(m1);
-		polynom.sort(_Comp);
 	}
 	@Override
 	public void substract(Polynom_able p1) {			//subtract polynom from polynom
-		Monom m = new Monom("-1");
-		Iterator<Monom> it = p1.iteretor();
-		while(it.hasNext()) {
-			it.next().multipy(m);;
+		if(!p1.equals(this)) {
+			Monom m = new Monom("-1");
+			Iterator<Monom> it = p1.iteretor();
+			while(it.hasNext()) {
+				it.next().multipy(m);;
+			}
+			Iterator<Monom> it2 = p1.iteretor();
+			while(it2.hasNext()) {
+				this.add(it2.next());
+			}
 		}
-		Iterator<Monom> it2 = p1.iteretor();
-		while(it2.hasNext()) {
-			this.add(it2.next());
-		}
+		polynom.clear();
+		Monom n = new Monom("0");
+		polynom.add(n);
+		return;
 	}
 
 	@Override
@@ -108,42 +109,40 @@ public class Polynom implements Polynom_able{
 			else
 				this.add(polynom2.get(i));
 		}
+
 	}
 
 	@Override
-	public boolean equals(Polynom_able p1) {					//checks if two polynoms are equal
-		Iterator<Monom> it0 = p1.iteretor();
-		int count = 0;
-		for (;it0.hasNext(); count++) {
-			it0.next();		
-		}
-		if(count != polynom.size()) {
-			return false;
-		}
-		boolean[] monoms =new boolean[polynom.size()];
-		int i=0;
-		for (int j = 0; j < polynom.size(); j++) {
-			Iterator<Monom> it1 = p1.iteretor();
-			while(it1.hasNext()) {
-				if(polynom.get(j).equals( it1.next() ) ) {
-					monoms[i]=true;
-					break;
-				}
+	public boolean equals(Object p) {					//checks if the Object is equal to Polynom
+		if(p instanceof Polynom) {
+			Polynom p1 =(Polynom)p;
+			Iterator<Monom> it0 = p1.iteretor();
+			int count = 0;
+			for (;it0.hasNext(); count++) {
+				it0.next();		
 			}
-			i++;
+			if(count != polynom.size()) {
+				return false;
+			}
+			boolean[] monoms =new boolean[polynom.size()];
+			int i=0;
+			for (int j = 0; j < polynom.size(); j++) {
+				Iterator<Monom> it1 = p1.iteretor();
+				while(it1.hasNext()) {
+					if(polynom.get(j).equals( it1.next() ) ) {
+						monoms[i]=true;
+						break;
+					}
+				}
+				i++;
+			}
+			for (int j = 0; j < monoms.length; j++) {
+				if(monoms[j]==false)return false;
+			}
+			return true;
 		}
-		for (int j = 0; j < monoms.length; j++) {
-			if(monoms[j]==false)return false;
-		}
-		return true;
+		return false;
 	}
-	@Override
-	public boolean equals(Object p1){
-
-
-	}
-
-
 
 	@Override
 	public boolean isZero() {								//checks if a polynom is equal to zero
@@ -186,7 +185,8 @@ public class Polynom implements Polynom_able{
 		Polynom cop = new Polynom();
 		Iterator<Monom> it = this.iteretor();
 		while(it.hasNext()) {
-			cop.add(it.next());
+			Monom temp = new Monom(it.next());
+			cop.add(temp);
 		}
 		return cop;
 	}
@@ -232,6 +232,23 @@ public class Polynom implements Polynom_able{
 
 		}
 		return ans;
+	}
+	public void initFromFile(String file) throws IOException{
+
+	}
+	public void saveToFile(String file) throws IOException{
+
+	}
+	public void drawFunctions(int width, int height, Range rx, Range ry, int resolution) {
+
+	}
+	public void drawFunctions(String json_file) {
+
+	}
+	@Override
+	public function initFromString(String s) {
+		function a = new Polynom(s);
+		return a;
 	}
 
 }
