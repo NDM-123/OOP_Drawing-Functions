@@ -1,6 +1,7 @@
 package Ex1;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -11,10 +12,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 public class Functions_GUI implements functions{
 	public LinkedList <function>  fun; 
@@ -97,32 +95,25 @@ public class Functions_GUI implements functions{
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		
+
 		return false;
 	}
 
 	@Override
 	public void initFromFile(String file) throws IOException {
-		Gson gson = new Gson();
 		try 
 		{
-			FileReader reader = new FileReader(file);
-			JsonElement json= gson.fromJson(reader,JsonElement.class);
-			String jsonInString = gson.toJson(json);
-			System.out.println(jsonInString);
-			String[] f = jsonInString.split("\\r?\\n");
-			System.out.println(f);
-			int count =0;
-			for(int i =0;i<f.length;i++) {
-				if(isFunction(f[i])) {
-					ComplexFunction cf = new ComplexFunction(f[i]);
-					fun.add(cf);
-					count++;
-				}
+			BufferedReader reader = new BufferedReader(new FileReader(file));
+			String inp = reader.readLine();
+			String f ="f(x):";
+			while(inp!=null) {
+				inp=inp.replaceAll("\\s+","");
+				inp = inp.substring(inp.indexOf("f(x):")+f.length());
+				ComplexFunction cf = new ComplexFunction(inp);
+				fun.add(cf);
+				inp=reader.readLine();
 			}
-			if(count!=f.length)System.out.println("The number of functions that was accepted is: "+count +" /nThe number of functions that wasnt accepted is: "+(f.length-count));
-			if(count == f.length)System.out.println("All functions were accepted");
-
+			reader.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -151,53 +142,57 @@ public class Functions_GUI implements functions{
 
 	@Override
 	public void drawFunctions(int width, int height, Range rx, Range ry, int resolution) {
-
-	int n = resolution;
-	StdDraw.setCanvasSize(width, height);
-	int size = fun.size();
-	double[] x = new double[n+1];
-	double[][] yy = new double[size][n+1];
-	double x_step = (rx.get_max()-rx.get_min())/n;
-	double x0 = rx.get_min();
-	for (int i=0; i<=n; i++) {
-		x[i] = x0;
-		for(int a=0;a<size;a++) {
-			yy[a][i] = fun.get(a).f(x[i]);
+		StdDraw.setCanvasSize(width, height);
+		StdDraw.setXscale(rx.get_min(), rx.get_max());
+		StdDraw.setYscale(ry.get_min(), ry.get_max());
+		StdDraw.setPenColor(Color.BLUE);
+		for (double i = rx.get_min(); i <= rx.get_max(); i++) {
+			StdDraw.line(i, ry.get_min(), i, ry.get_max());
 		}
-		x0+=x_step;
-	}
-	StdDraw.setXscale(rx.get_min(), rx.get_max());
-	StdDraw.setYscale(ry.get_min(), ry.get_max());
-	
-	
-	// plot the approximation to the function
-	for(int a=0;a<size;a++) {
-		int c = a%Colors.length;
-		StdDraw.setPenColor(Colors[c]);
-	
-		System.out.println(a+") "+Colors[a]+"  f(x)= "+fun.get(a));
-		for (int i = 0; i < n; i++) {
-			StdDraw.line(x[i], yy[a][i], x[i+1], yy[a][i+1]);
+		for (double i = ry.get_min(); i <= ry.get_max(); i++) {
+			StdDraw.line(rx.get_min(),i ,rx.get_max(), i );
 		}
-	}	
-}
-	@Override
+		StdDraw.setPenColor(Color.BLACK);
+		StdDraw.setPenRadius(0.010);
+		StdDraw.setFont(new Font("Ariel", Font.PLAIN, 14));
+		StdDraw.line(rx.get_min(), 0, rx.get_max(), 0);
+		for (double i = rx.get_min(); i <= rx.get_max(); i++) {
+			StdDraw.text(i, -0.30, Integer.toString(Math.toIntExact((long) i)));
+		}
+		StdDraw.line(0, ry.get_min(), 0, ry.get_max());
+		for (double i = ry.get_min(); i <= ry.get_max(); i++) {
+			StdDraw.text(-0.20,i, Integer.toString(Math.toIntExact((long) i)));
+		}
+		for (int i = 0; i < fun.size(); i++) {
+			double interval = (Math.abs(rx.get_min())+Math.abs(rx.get_max()))/resolution;
+			int R = (int)(Math.random()*256);
+			int G = (int)(Math.random()*256);
+			int B= (int)(Math.random()*256);
+			Color color = new Color(R, G, B);
+			StdDraw.setPenColor(color);
+			for (double j = rx.get_min(); j < rx.get_max(); j+=interval)
+			{
+				function a = fun.get(0);
+				StdDraw.line(j, a.f(j), j+interval, a.f(j+interval));
+			}
+		}
+	}		@Override
 	public void drawFunctions(String json_file) {
 		Gson gson = new Gson();
 
 		//  JSON file to JsonElement, later String
 		try {
 			String json = gson.toJson(new FileReader(json_file));
-		//	String result = gson.toJson(json);
+			//	String result = gson.toJson(json);
 			System.out.println(json.toString());
 			String[] f = result.split("\\r?\\n");
 			System.out.println(f);
 			for(int i =0;i<f.length;i++) {
-					ComplexFunction cf = new ComplexFunction(f[i]);
-					fun.add(cf);
+				ComplexFunction cf = new ComplexFunction(f[i]);
+				fun.add(cf);
 			}
 
-			  System.out.println(result);
+			System.out.println(result);
 			drawFunctions(json.height,json.width,json.rx,json.ry,json.resolution);
 		}
 		catch (Exception e) {

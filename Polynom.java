@@ -32,6 +32,8 @@ public class Polynom implements Polynom_able{
 	 * @param s: is a string represents a Polynom
 	 */
 	public Polynom(String s) {				//plynom constructor from a string
+	s=s.toLowerCase();
+		s=s.replaceAll("\\s+","");
 		int i = 0;
 		while (i<s.length()) {
 			String a = "";

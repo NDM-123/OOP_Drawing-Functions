@@ -55,6 +55,8 @@ public class Monom implements function{
 	// ***************** add your code below **********************
 	public Monom(String s) { 						//constructor that receives a string and initialize it as a monom 
 		try {
+			s=s.toLowerCase();
+			s=s.replaceAll("\\s+","");
 			if( !Character.isDigit(s.charAt(0)) &&s.charAt(0)!='x'&& s.charAt(0)!= '^'&& s.charAt(0)!= '-' ) {
 				throw new InputMismatchException();
 			}
