@@ -1,8 +1,8 @@
 *This project creates Monoms and Polynoms and has a number of functions that interact with them.
-***Update 1.1 - We added to this project the options to create complex function using operations such as:Multiplying,Adding,dividing and so on. 
+**Update 1.1 - We added to this project the options to create complex function using operations such as:Multiplying,Adding,dividing and so on. 
 ** Update 1.2 - The new update allows the user to upload all the functions he wants to the project through Json file.
-***Update 2.0 - In this updadte we added the options to draw the functions the user created, using Cartesian coordinate system you can now see in a special GUI  
-*** Update 2.1 - The new update allows the user to upload all the functions he wants to draw,including the parameters he wants to draw with in the project through Json file.
+**Update 2.0 - In this updadte we added the options to draw the functions the user created, using Cartesian coordinate system you can now see in a special GUI  
+** Update 2.1 - The new update allows the user to upload all the functions he wants to draw,including the parameters he wants to draw with in the project through Json file.
 
 The functions that operate in monom:
 1)Adding one monom to another.
@@ -10,7 +10,7 @@ The functions that operate in monom:
 3)Checking equality.
 4)Returns the value of a given x in the function.
 5)If the monom equal to zero.
-Does the derivative of the monom.
+6)Does the derivative of the monom.
 
 The functions that operate with polynoms:
 1)Adding to the polynom monom/polynom.
