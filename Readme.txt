@@ -51,3 +51,5 @@ Important:
 Because the polynom is made of monoms, an invalid string of polynom will create a polynom from the valid figures in the string, if there is any.(an error will be printed for the invalid syntax, the valid will be recognized in the project).
 In order to upload a document to the project its needed to leave the project in the root directory of the project,and it should be in a txt format.
 
+![Screenshot (32)](https://user-images.githubusercontent.com/57434608/70650054-05027100-1c57-11ea-8e17-104e08417763.png)
+
